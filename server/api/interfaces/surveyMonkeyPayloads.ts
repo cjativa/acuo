@@ -1,13 +1,15 @@
 export interface SurveysPayload {
     per_page: number,
     total: number,
-    data: {
-        href: string,
-        nickname: string,
-        id: string,
-        title: string
-    }[],
+    data: SurveyData[],
     page: number
+}
+
+export interface SurveyData {
+    href: string,
+    nickname: string,
+    id: string,
+    title: string
 }
 
 export interface SurveyDetailsPayload {
@@ -31,8 +33,8 @@ interface SurveyPage {
 }
 
 export interface SueveyResponsesPayload {
-    per_page: number, 
-    total: number, 
+    per_page: number,
+    total: number,
     data: SurveyResponse[]
     page: number
 }
@@ -48,5 +50,5 @@ interface SurveyResponse {
 }
 
 interface SurveyResponsePage {
-    
+
 }
