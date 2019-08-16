@@ -1,51 +1,68 @@
 import * as smService from './api/services/surveyMonkeyService';
-import { SurveysPayload } from './api/interfaces/surveyMonkeyPayloads';
+import { SurveyDatabaseService } from './database/services/survey';
+import { SurveyData } from './api/interfaces/surveyMonkeyPayloads';
 
 
-async function main() {
+class SurveyProcessor {
 
-    // Parse and pull in the surveys list
-    parseSurveys();
+    private sds: SurveyDatabaseService;
 
-    // Pull in responses for each survey in the database
-}
+    constructor() {
+        this.sds = new SurveyDatabaseService();
+    }
 
-async function parseSurveys() {
+    async main(survey: SurveyData) {
 
-    // Pull in list of surveys
-    const surveys = await smService.retrieveSurveys();
-    const { data } = surveys;
-
-    // Iterate through each survey payload
-    for (let i = 0; i < data.length; i++) {
-
-        const survey = data[i];
+        // Get survey information and write to database
         const { title, id, href } = survey;
+        await this.sds.createSurvey(id, title, href);
 
-        await parseSurveyDetails(id);
+        await this.parseSurveyDetails(id);
+    }
+
+    async parseSurveyDetails(surveyId: string) {
+
+        // Get the survey details
+        const surveyDetails = await smService.retrieveSurveyDetails(surveyId);
+
+        // Each survey will likely only have 1 page (since they'll typically be 5 or less questions)
+        const { questions } = surveyDetails.pages[0];
+
+        for (let i = 0; i < questions.length; i++) {
+
+            const question = questions[i];
+
+            // Get question information and write to database
+            const { id, family } = question;
+            await this.sds.createQuestions(id, family, surveyId);
+
+            // Iterate answer choices
+            for (let j = 0; j < question.answers.choices.length; j++) {
+
+                const choice = question.answers.choices[j];
+
+                // Get choice information and write to database
+                const { text, id: choiceId } = choice;
+                await this.sds.createChoices(choiceId, text, id);
+            }
+        }
     }
 }
 
-async function parseSurveyDetails(id: string) {
 
-    // Get the survey details
-    const surveyDetails = await smService.retrieveSurveyDetails(id);
+async function run() {
 
-    // Each survey will likely only have 1 page (since they'll typically be 5 or less questions)
-    const { questions } = surveyDetails.pages[0];
+    // Pull in list of surveys
+    const surveys = (await smService.retrieveSurveys()).data;
 
-    // For each question
-    questions.forEach((question) => {
+    // Iterate through each survey payload
+    for (let i = 0; i < surveys.length; i++) {
 
-        const { id, family } = question;
+        const sp = new SurveyProcessor();
+        const survey = surveys[i];
 
-        // Iterate answer choices
-        question.answers.choices.forEach((choice) => {
-
-            const { text, id } = choice;
-
-        });
-    });
+        sp.main(survey);
+    }
 }
 
-main();
+run();
