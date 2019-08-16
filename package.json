@@ -4,6 +4,8 @@
   "description": "Sync process for grabbing survey information and responses from Survey Monkey and storing them into a Postgresql database for PowerBI",
   "main": "index.ts",
   "scripts": {
+    "start": "node dist/app.js",
+    "watch": "tsc -w -p server/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Christopher Daniel Jativa",
@@ -14,6 +16,7 @@
   },
   "dependencies": {
     "axios": "^0.19.0",
-    "knex": "^0.19.1"
+    "knex": "^0.19.1",
+    "pg": "^7.12.1"
   }
 }
