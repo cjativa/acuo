@@ -5,5 +5,6 @@ export const tables = {
     users: 'users',
     managers: 'managers',
     responses: 'responses',
-    responsesDetails: 'response_details'
+    responsesDetails: 'response_details',
+    surveyDemographicQuestions: 'survey_demographic_questions'
 }

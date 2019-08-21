@@ -25,7 +25,7 @@ export interface SurveyDetailsPayload {
 interface SurveyPage {
     questions: {
         family: string
-        answers: { choices: { id: string, text: string }[] }
+        answers: { choices?: { id: string, text: string }[], rows?: { text: string, type: string, id: string }[] }
         headings: { heading: string }[],
         id: string
     }[],
@@ -60,5 +60,7 @@ interface SurveyResponsePageQuestion {
 }
 
 interface SurveyResponsePageAnswer {
-    choice_id: string
+    choice_id: string,
+    text?: string,
+    row_id?: string
 }

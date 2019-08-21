@@ -132,4 +132,66 @@ export class SurveyDatabaseService {
             console.log(`Could not insert response id ${response_id} and question id ${question_id} in Responses table`, error);
         }
     }
+
+    async createDemographicQuestion(survey_id: string, question_id: string, row_id: string) {
+
+        try {
+            const rows = await knex
+                .from(t.surveyDemographicQuestions)
+                .where({ survey_id, row_id });
+
+            if (rows.length == 0) {
+                await knex
+                    .from(t.surveyDemographicQuestions)
+                    .insert({ survey_id, question_id, row_id });
+            }
+
+            else {
+                await knex
+                    .from(t.surveyDemographicQuestions)
+                    .update({ survey_id, question_id, row_id })
+                    .where({ survey_id, row_id });
+            }
+        }
+
+        catch (error) {
+            console.log(`Could not insert row id ${row_id} and survey id ${survey_id} in Survey Demographic Questions table`, error);
+        }
+    }
+
+    async getDemographicQuestion(survey_id): Promise<{ question_id: string, row_id: string }> {
+
+        try {
+            const rows = await knex
+                .from(t.surveyDemographicQuestions)
+                .where({ survey_id });
+
+            if (rows.length == 0) {
+                return null;
+            }
+
+            else {
+                const { question_id, row_id } = rows[0];
+                return { question_id, row_id };
+            }
+        }
+
+        catch (error) {
+            console.log(`Could not the demographic question row id for survey id ${survey_id} in Survey Demographic Questions table`, error);
+        }
+    }
+
+    async updateResponseDetails(user_id: string, response_id: string) {
+
+        try {
+            const rows = await knex
+                .from(t.responsesDetails)
+                .update({ user_id })
+                .where({ response_id });
+        }
+
+        catch (error) {
+            console.log(`Could not update response id ${response_id} with user id ${user_id} in Response Details`, error);
+        }
+    }
 }

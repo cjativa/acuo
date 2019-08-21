@@ -1,14 +1,17 @@
 import * as smService from './api/services/surveyMonkeyService';
 import { SurveyDatabaseService } from './database/services/survey';
 import { SurveyData } from './api/interfaces/surveyMonkeyPayloads';
+import { UserDatabaseService } from './database/services/user';
 
 
 class SurveyProcessor {
 
     private sds: SurveyDatabaseService;
+    private uds: UserDatabaseService;
 
     constructor() {
         this.sds = new SurveyDatabaseService();
+        this.uds = new UserDatabaseService();
     }
 
     async main(survey: SurveyData) {
@@ -18,7 +21,9 @@ class SurveyProcessor {
         await this.sds.createSurvey(id, title, href);
 
         await this.parseSurveyDetails(id);
-        await this.parseSurveyResponse(id);
+
+        const demoQuestion = await this.sds.getDemographicQuestion(id);
+        await this.parseSurveyResponse(id, demoQuestion);
     }
 
     async parseSurveyDetails(surveyId: string) {
@@ -34,8 +39,17 @@ class SurveyProcessor {
             const question = questions[i];
 
             // Get question information and write to database
-            const { id, family } = question;
-            await this.sds.createQuestions(id, family, surveyId);
+            const { id: questionId, family } = question;
+            await this.sds.createQuestions(questionId, family, surveyId);
+
+            // Store the location of the demographic question
+            if (family === "demographic") {
+                const { id: rowId } = question.answers.rows.find((row) => {
+                    return row.type === "name";
+                });
+
+                await this.sds.createDemographicQuestion(surveyId, questionId, rowId);
+            }
 
             // Iterate answer choices
             for (let j = 0; j < question.answers.choices.length; j++) {
@@ -44,12 +58,12 @@ class SurveyProcessor {
 
                 // Get choice information and write to database
                 const { text, id: choiceId } = choice;
-                await this.sds.createChoices(choiceId, text, id);
+                await this.sds.createChoices(choiceId, text, questionId);
             }
         }
     }
 
-    async parseSurveyResponse(surveyId: string) {
+    async parseSurveyResponse(surveyId: string, demoQuestion: { question_id: string, row_id: string }) {
 
         // Get the survey response payloads
         const responses = (await smService.retrieveSurveyResponse(surveyId)).data;
@@ -74,9 +88,21 @@ class SurveyProcessor {
 
                     for (let l = 0; l < answers.length; l++) {
 
+                        if (question_id === demoQuestion.question_id) {
+                            const { text: username, row_id } = answers[l];
+
+                            if (row_id === demoQuestion.row_id) {
+                                const userId = await this.uds.getUserId(username);
+                                await this.sds.updateResponseDetails(userId, response_id);
+                            }
+                        }
+
                         // Store response id, question id, and choice
-                        const { choice_id } = answers[l];
-                        await this.sds.createResponses(response_id, question_id, choice_id);
+                        else {
+                            const { choice_id } = answers[l];
+                            await this.sds.createResponses(response_id, question_id, choice_id);
+                        }
+
                     }
                 }
             }
