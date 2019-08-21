@@ -18,6 +18,7 @@ class SurveyProcessor {
         await this.sds.createSurvey(id, title, href);
 
         await this.parseSurveyDetails(id);
+        await this.parseSurveyResponse(id);
     }
 
     async parseSurveyDetails(surveyId: string) {
@@ -44,6 +45,40 @@ class SurveyProcessor {
                 // Get choice information and write to database
                 const { text, id: choiceId } = choice;
                 await this.sds.createChoices(choiceId, text, id);
+            }
+        }
+    }
+
+    async parseSurveyResponse(surveyId: string) {
+
+        // Get the survey response payloads
+        const responses = (await smService.retrieveSurveyResponse(surveyId)).data;
+
+        for (let i = 0; i < responses.length; i++) {
+
+            const response = responses[i];
+
+            // Get response details and store it
+            const { id: response_id, response_status, date_created, survey_id, pages } = response;
+            await this.sds.createResponseDetails(response_id, response_status, date_created, surveyId);
+
+            for (let j = 0; j < pages.length; j++) {
+
+                const { questions } = pages[j];
+
+                for (let k = 0; k < questions.length; k++) {
+
+                    const question = questions[k];
+
+                    const { id: question_id, answers } = question;
+
+                    for (let l = 0; l < answers.length; l++) {
+
+                        // Store response id, question id, and choice
+                        const { choice_id } = answers[l];
+                        await this.sds.createResponses(response_id, question_id, choice_id);
+                    }
+                }
             }
         }
     }

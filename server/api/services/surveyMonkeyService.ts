@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SurveysPayload, SurveyDetailsPayload } from '../interfaces/surveyMonkeyPayloads';
+import { SurveysPayload, SurveyDetailsPayload, SurveyResponsesPayload } from '../interfaces/surveyMonkeyPayloads';
 import { SurveyMonkeyConfig } from '../../utils/axiosConfigs';
 
 export async function retrieveSurveys(): Promise<SurveysPayload> {
@@ -32,14 +32,14 @@ export async function retrieveSurveyDetails(id: string): Promise<SurveyDetailsPa
     }
 }
 
-export async function retrieveSurveyResponse(id: string) {
+export async function retrieveSurveyResponse(id: string): Promise<SurveyResponsesPayload> {
 
     const url = `surveys/${id}/responses/bulk`;
     const aConfig = new SurveyMonkeyConfig('get', url);
 
     try {
-        const response = (await axios(aConfig)).data as SurveyDetailsPayload;
-        console.log(response);
+        const response = (await axios(aConfig)).data as SurveyResponsesPayload;
+        return response;
     }
 
     catch (error) {

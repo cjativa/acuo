@@ -32,7 +32,7 @@ interface SurveyPage {
     question_count: number
 }
 
-export interface SueveyResponsesPayload {
+export interface SurveyResponsesPayload {
     per_page: number,
     total: number,
     data: SurveyResponse[]
@@ -50,5 +50,15 @@ interface SurveyResponse {
 }
 
 interface SurveyResponsePage {
+    id: string,
+    questions: SurveyResponsePageQuestion[]
+}
 
+interface SurveyResponsePageQuestion {
+    id: string, 
+    answers: SurveyResponsePageAnswer[]
+}
+
+interface SurveyResponsePageAnswer {
+    choice_id: string
 }

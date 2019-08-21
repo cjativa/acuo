@@ -3,5 +3,7 @@ export const tables = {
     questions: 'questions',
     choices: 'choices',
     users: 'users',
-    managers: 'managers'
+    managers: 'managers',
+    responses: 'responses',
+    responsesDetails: 'response_details'
 }
