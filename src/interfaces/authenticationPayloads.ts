@@ -1,4 +1,5 @@
 export interface AuthenticationResponse {
 
-    requestComplete: boolean
+    requestComplete: boolean,
+    authenticated?: boolean
 }

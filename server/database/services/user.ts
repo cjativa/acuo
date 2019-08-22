@@ -1,5 +1,6 @@
 import { knex } from '../knex';
 import { tables as t } from '../tables';
+import { EMAIL, USERNAME } from '../../api/constants/identifierTypes';
 
 export class UserDatabaseService {
 
@@ -39,6 +40,33 @@ export class UserDatabaseService {
 
         catch (error) {
             console.log(`Could not create user for ${email}`, error);
+        }
+    }
+
+    async findUser(identifier: string, identifierType: string) {
+
+        try {
+            let rows: any[];
+
+            if (identifierType === EMAIL) {
+                rows = await knex
+                    .select('id', 'username', 'email', 'password')
+                    .from(t.users)
+                    .where({ email: identifier });
+            }
+
+            else {
+                rows = await knex
+                    .select('id', 'username', 'email', 'password')
+                    .from(t.users)
+                    .where({ username: identifier });
+            }
+
+            return rows;
+        }
+
+        catch (error) {
+            console.log(`Could not find user for identifier type ${identifierType} and identifier ${identifier}`, error);
         }
     }
 }

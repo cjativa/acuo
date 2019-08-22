@@ -30,11 +30,11 @@ export class LoginDialog extends React.Component<any, State> {
         this.setState({ password: event.target.value });
     }
 
-    login = (event) => {
+    login = async (event) => {
         event.preventDefault();
 
         const { identifier, password } = this.state;
-        this.as.login(identifier, password);
+        await this.as.login(identifier, password);
     }
 
     render() {

@@ -1,10 +1,12 @@
 import { SignUpPayload, LoginPayload } from '../interfaces/authenticationPayloads';
 import { UserDatabaseService } from '../../database/services/user';
 import { ManagerDatabaseService } from '../../database/services/manager';
+import { EMAIL, USERNAME } from '../constants/identifierTypes';
+
 
 export class AuthenticationService {
 
-    async signUp(sp: SignUpPayload) {
+    async signUp(sp: SignUpPayload): Promise<AuthenticationResponse> {
 
         const uds = new UserDatabaseService();
         const { firstName, lastName, username, email, password, manager } = sp;
@@ -21,16 +23,52 @@ export class AuthenticationService {
         return new AuthenticationResponse(true);
     }
 
-    login(lp: LoginPayload) {
+    async login(lp: LoginPayload): Promise<AuthenticationResponse> {
 
+        const uds = new UserDatabaseService();
+        const { identifier, password } = lp;
+        const identifierType = this.determineIdentifierType(identifier);
+
+        const userRows = await uds.findUser(identifier, identifierType);
+        
+        if (userRows.length === 0) {
+            return new AuthenticationResponse(true, false);
+        }
+
+        else {
+            const user = userRows[0];
+
+            if (password === user.password) {
+                return new AuthenticationResponse(true, true);
+            } 
+
+            else {
+                return new AuthenticationResponse(true, false);
+            }
+        }
+    }
+
+    private determineIdentifierType(identifier: string): string {
+        if (identifier.includes('@')) {
+            return EMAIL;
+        }
+
+        else {
+            return USERNAME;
+        }
     }
 }
 
 class AuthenticationResponse {
 
     requestComplete: boolean;
+    authenticated: boolean;
 
-    constructor(requestComplete: boolean) {
+    constructor(requestComplete: boolean, authenticated?: boolean) {
         this.requestComplete = requestComplete;
+
+        if (authenticated !== undefined) {
+            this.authenticated = authenticated;
+        }
     }
 }

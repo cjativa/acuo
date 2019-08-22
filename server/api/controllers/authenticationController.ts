@@ -9,10 +9,15 @@ export async function signUp(request: express.Request, response: express.Respons
 
     const ar = await as.signUp(signUpPayload);
 
-    response.json('Hi');
+    response.json(ar);
 }
 
 export async function login(request: express.Request, response: express.Response) {
 
+    const as = new AuthenticationService();
     const { loginPayload } = request.body;
+
+    const ar = await as.login(loginPayload);
+
+    response.json(ar);
 }

@@ -19,8 +19,17 @@ export class AuthenticationService {
         }
     }
 
-    login(identifier: string, password: string) {
+    async login(identifier: string, password: string) {
         const loginPayload = new LoginPayload(identifier, password);
+
+        try {
+            const response = (await axios({ method: 'post', url: '/api/login', data: { loginPayload } })).data as AuthenticationResponse;
+            console.log(response);
+        }
+
+        catch (error) {
+            console.log('Could not login user', error);
+        }
     }
 }
 
