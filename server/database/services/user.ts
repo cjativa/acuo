@@ -29,7 +29,7 @@ export class UserDatabaseService {
         try {
             const rows = await knex
                 .from(t.users)
-                .insert({ first_name, last_name, username, email, password, is_manager })
+                .insert({ first_name, last_name, username, email, password, is_manager, manager_id: null })
                 .returning('id');
 
             const id = rows[0];

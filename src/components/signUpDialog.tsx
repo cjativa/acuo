@@ -56,11 +56,11 @@ export class SignUpDialog extends React.Component<any, State> {
         }));
     }
 
-    signUp = (event) => {
+    signUp = async (event) => {
         event.preventDefault();
 
         const { firstName, lastName, email, username, password, managerChecked } = this.state;
-        this.as.signUp(firstName, lastName, email, username, password, managerChecked);
+        await this.as.signUp(firstName, lastName, email, username, password, managerChecked);
     }
 
     render() {
