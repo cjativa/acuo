@@ -17,7 +17,7 @@ export async function login(request: express.Request, response: express.Response
     const as = new AuthenticationService();
     const { loginPayload } = request.body;
 
-    const ar = await as.login(loginPayload);
+    const ar = await as.login(loginPayload, request);
 
     response.json(ar);
 }

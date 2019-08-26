@@ -1,3 +1,5 @@
+import * as express from 'express';
+
 import { SignUpPayload, LoginPayload } from '../interfaces/authenticationPayloads';
 import { UserDatabaseService } from '../../database/services/user';
 import { ManagerDatabaseService } from '../../database/services/manager';
@@ -23,7 +25,7 @@ export class AuthenticationService {
         return new AuthenticationResponse(true);
     }
 
-    async login(lp: LoginPayload): Promise<AuthenticationResponse> {
+    async login(lp: LoginPayload, request: express.Request): Promise<AuthenticationResponse> {
 
         const uds = new UserDatabaseService();
         const { identifier, password } = lp;
@@ -39,6 +41,14 @@ export class AuthenticationService {
             const user = userRows[0];
 
             if (password === user.password) {
+
+                const { userId, username, email } = user;
+
+                // Setup the session
+                request.session.authenticated = true;
+                request.session.userId = userId;
+                request.session.username = username;
+
                 return new AuthenticationResponse(true, true);
             } 
 

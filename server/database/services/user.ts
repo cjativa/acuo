@@ -1,6 +1,7 @@
 import { knex } from '../knex';
 import { tables as t } from '../tables';
 import { EMAIL, USERNAME } from '../../api/constants/identifierTypes';
+import { UserInformation } from '../../api/interfaces/userDatabasePayloads';
 
 export class UserDatabaseService {
 
@@ -50,14 +51,14 @@ export class UserDatabaseService {
 
             if (identifierType === EMAIL) {
                 rows = await knex
-                    .select('id', 'username', 'email', 'password')
+                    .select('id as userId', 'username', 'email', 'password')
                     .from(t.users)
                     .where({ email: identifier });
             }
 
             else {
                 rows = await knex
-                    .select('id', 'username', 'email', 'password')
+                    .select('id as userId', 'username', 'email', 'password')
                     .from(t.users)
                     .where({ username: identifier });
             }
@@ -67,6 +68,35 @@ export class UserDatabaseService {
 
         catch (error) {
             console.log(`Could not find user for identifier type ${identifierType} and identifier ${identifier}`, error);
+        }
+    }
+
+    async getUser(user_id: string): Promise<UserInformation> {
+
+        try {
+            const rows = await knex
+                .select('first_name as firstName, last_name as lastName, username, email, is_manager as isManager')
+                .from(t.users)
+                .where({ user_id });
+
+            return rows[0];
+        }
+
+        catch (error) {
+            console.log(`Could not get the user information for user id ${user_id} in Users table`, error);
+        }
+    }
+
+    async assignEmployeeToManager(user_id: string, manager_id: string) {
+        try {
+            await knex
+                .from(t.users)
+                .update({ manager_id })
+                .where({ user_id });
+        }
+
+        catch (error) {
+            console.log(`Could not assign User Id ${user_id} to Manager Id ${manager_id}`, error);
         }
     }
 }
