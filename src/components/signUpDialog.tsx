@@ -69,13 +69,18 @@ export class SignUpDialog extends React.Component<any, State> {
         const { firstNameChange, lastNameChange, emailChange, usernameChange, passwordChange, signUp, managerChange } = this;
 
         return (
-            <div>
+            <div className="authentication-dialog">
                 <form>
-                    <div className="form-field name">
-                        <label>First Name</label>
-                        <input type="text" value={firstName} onChange={firstNameChange} />
-                        <label>Last Name</label>
-                        <input type="text" value={lastName} onChange={lastNameChange} />
+                    <h1 className="form-title">Sign up to get started</h1>
+                    <div className="name-field">
+                        <div className="form-field">
+                            <label>First Name</label>
+                            <input type="text" value={firstName} onChange={firstNameChange} />
+                        </div>
+                        <div className="form-field">
+                            <label>Last Name</label>
+                            <input type="text" value={lastName} onChange={lastNameChange} />
+                        </div>
                     </div>
                     <div className="form-field">
                         <label>Email</label>
@@ -89,7 +94,7 @@ export class SignUpDialog extends React.Component<any, State> {
                         <label>Password</label>
                         <input type="password" value={password} onChange={passwordChange} />
                     </div>
-                    <div className="form-field">
+                    <div className="form-field checkbox">
                         <label>I am a manager</label>
                         <input type="checkbox" onChange={managerChange} checked={managerChecked} />
                     </div>

@@ -3,7 +3,6 @@ import * as React from 'react';
 import { AuthenticationDialog } from './authenticationDialog';
 import { LoginDialog } from './loginDialog';
 import { SignUpDialog } from './signUpDialog';
-import { throwStatement } from '@babel/types';
 
 interface State {
     displayDialog: boolean,
@@ -36,10 +35,16 @@ export class NavigationBar extends React.Component<any, State> {
 
         return (
             <>
-                <nav>
-                    <span>Acuo</span>
-                    <button onClick={() => {displayDialogType(LoginDialog)}}>Login</button>
-                    <button onClick={() => {displayDialogType(SignUpDialog)}}>Sign Up</button>
+                <nav className="navigation-bar">
+                    <div className="logo-box">
+                        <span className="main">Acuo</span>
+                        <span className="tagline">transforming employee appraisal</span>
+                    </div>
+                    <div className="button-box">
+                        <button className="login" onClick={() => { displayDialogType(LoginDialog) }}>Login</button>
+                        <button className="sign-up" onClick={() => { displayDialogType(SignUpDialog) }}>Sign Up</button>
+                    </div>
+
                 </nav>
 
                 {displayDialog && <AuthenticationDialog dialog={dialog} closeDialog={closeDialog} />}

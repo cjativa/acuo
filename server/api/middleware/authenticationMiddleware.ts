@@ -2,10 +2,8 @@ import * as express from 'express';
 
 export const isSessionAuthenticated = async (request: express.Request, response: any, next) => {
 
-
-	// Check that the user has a uuid -- meaning the session exists
+    // Check that the user has a uuid -- meaning the session exists
 	if (request.session.authenticated == true) {
-        console.log('going next');
 		next();
 	}
 
@@ -18,6 +16,7 @@ export const isSessionAuthenticated = async (request: express.Request, response:
 		}
 
 		else {
+            console.log('re');
 			response.redirect('/');
 		}
 	}

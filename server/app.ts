@@ -19,18 +19,18 @@ const session = expressSession({
 
 app.use(express.json());
 app.use(session);
-app.use(express.static(path.join(__dirname, 'build')));
 
 // Protect these routes with session authentication
-app.use('/api/user', isSessionAuthenticated, userRouter)
+app.use('/api/user', isSessionAuthenticated, userRouter);
 
 // General api routes
 app.use('/api', apiRouter);
 
+app.use(express.static(path.join(__dirname, 'build')));
 const buildPath = path.join(__dirname, '/build', 'index.html');
 
 app.get('/*', (request, response) => {
-	response.sendFile(buildPath);
+	response.sendFile(buildPath); 
 });
 
 app.listen(Config.port, () => {

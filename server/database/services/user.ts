@@ -71,32 +71,32 @@ export class UserDatabaseService {
         }
     }
 
-    async getUser(user_id: string): Promise<UserInformation> {
+    async getUser(id: string): Promise<UserInformation> {
 
         try {
             const rows = await knex
                 .select('first_name as firstName, last_name as lastName, username, email, is_manager as isManager')
                 .from(t.users)
-                .where({ user_id });
+                .where({ id });
 
             return rows[0];
         }
 
         catch (error) {
-            console.log(`Could not get the user information for user id ${user_id} in Users table`, error);
+            console.log(`Could not get the user information for user id ${id} in Users table`, error);
         }
     }
 
-    async assignEmployeeToManager(user_id: string, manager_id: string) {
+    async assignEmployeeToManager(id: string, manager_id: string) {
         try {
             await knex
                 .from(t.users)
                 .update({ manager_id })
-                .where({ user_id });
+                .where({ id });
         }
 
         catch (error) {
-            console.log(`Could not assign User Id ${user_id} to Manager Id ${manager_id}`, error);
+            console.log(`Could not assign User Id ${id} to Manager Id ${manager_id}`, error);
         }
     }
 }

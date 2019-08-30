@@ -27,7 +27,7 @@ export class AuthenticationDialog extends React.Component<Props, State> {
     onRequestClose = () => {
         this.props.closeDialog();
     }
-    
+
 
     render() {
 
@@ -36,7 +36,13 @@ export class AuthenticationDialog extends React.Component<Props, State> {
         const { dialog: Dialog } = this.props;
 
         return (
-            <Modal isOpen={isOpen} onRequestClose={onRequestClose}><Dialog/></Modal>
+            <Modal
+                className="base-dialog"
+                overlayClassName="modal-overlay"
+                isOpen={isOpen}
+                onRequestClose={onRequestClose}>
+                <Dialog />
+            </Modal>
         )
     }
 }

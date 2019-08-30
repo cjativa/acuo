@@ -5,5 +5,5 @@ import * as mc from '../controllers/managerController';
 
 export const userRouter = express.Router();
 
-userRouter.get('/user', (request, response, next) => { console.log('Hi')});
-userRouter.post('/userAddToManager', mc.assignUsersToManager)
+userRouter.get('/', uc.getUserInformation);
+userRouter.post('/manager', mc.assignUsersToManager)

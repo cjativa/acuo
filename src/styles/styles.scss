@@ -1,0 +1,14 @@
+body {
+  font-family: "Nunito";
+}
+
+body, button { 
+    margin: 0px;
+    padding: 0px;
+}
+
+@import url("https://fonts.googleapis.com/css?family=Nunito");
+
+// Top-level items
+@import "./components/navigationBar.scss";
+@import "./components/authenticationDialog.scss";

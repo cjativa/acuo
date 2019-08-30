@@ -43,8 +43,10 @@ export class LoginDialog extends React.Component<any, State> {
         const { identifierChange, passwordChange, login } = this;
 
         return (
-            <div>
+            <div className="authentication-dialog">
+
                 <form>
+                    <h1 className="form-title">Log into your Acuo account</h1>
                     <div className="form-field">
                         <label>Username or Email</label>
                         <input type="text" value={identifier} onChange={identifierChange} />
