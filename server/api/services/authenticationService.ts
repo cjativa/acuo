@@ -32,7 +32,7 @@ export class AuthenticationService {
         const identifierType = this.determineIdentifierType(identifier);
 
         const userRows = await uds.findUser(identifier, identifierType);
-        
+
         if (userRows.length === 0) {
             return new AuthenticationResponse(true, false);
         }
@@ -42,15 +42,22 @@ export class AuthenticationService {
 
             if (password === user.password) {
 
-                const { userId, username, email } = user;
+                const { userId, username, email, isManager } = user;
 
                 // Setup the session
                 request.session.authenticated = true;
                 request.session.userId = userId;
                 request.session.username = username;
 
+                // If they're a manager, get the managerId
+                if (isManager) {
+                    const { managerId } = (await uds.getManagerId(userId));
+
+                    request.session.managerId = managerId;
+                }
+
                 return new AuthenticationResponse(true, true);
-            } 
+            }
 
             else {
                 return new AuthenticationResponse(true, false);

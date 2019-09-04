@@ -6,11 +6,14 @@ export async function getManagerInformation(request: express.Request, response: 
 
 }
 
+
 export async function getEmployees(request: express.Request, response: express.Response) {
 
     const { managerId } = request.session;
 
-    await new ManagerService().getAssignedEmployees(managerId);
+    const employees = await new ManagerService().getManagerInformation(managerId);
+
+    response.json(employees);
 }
 
 export async function assignUsersToManager(request: express.Request, response: express.Response) {

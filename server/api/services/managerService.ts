@@ -2,20 +2,14 @@ import { ManagerDatabaseService } from '../../database/services/manager';
 
 export class ManagerService {
 
-    async getManagerInformation() {
+    async getManagerInformation(managerId: string) {
 
-    }
+        const mds = new ManagerDatabaseService();
 
-    async getAssignedEmployees(managerId: string) {
-        const employees = await new ManagerDatabaseService().getAssignedEmployees(managerId);
+        const availableEmployees = await mds.getAvailableEmployees(managerId);
+        const assignedEmployees = await mds.getAssignedEmployees(managerId);
 
-        console.log(employees);
-    }
-
-    async getAvailableEmployees(managerId: string) {
-        const employees = await new ManagerDatabaseService().getAvailableEmployees(managerId);
-
-        console.log(employees);
+        return { availableEmployees, assignedEmployees };
     }
 
     async assignUsersToManager(managerId: string, users: string[]) {

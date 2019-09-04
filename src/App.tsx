@@ -1,13 +1,18 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import { NavigationBar } from './components/navigationBar';
+import { UserPage } from './components/userPage';
 
 const App: React.FC = () => {
   return (
     <div className="App">
-      <NavigationBar />
+      <BrowserRouter>
+        <NavigationBar />
+        <Switch>
+          <Route path="/user" component={UserPage} />
+        </Switch>
+      </BrowserRouter>
     </div>
   );
 }

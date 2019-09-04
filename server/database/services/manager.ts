@@ -50,8 +50,12 @@ export class ManagerDatabaseService {
             const rows = await knex
                 .select('first_name as firstName', 'last_name as lastName', 'id as userId')
                 .from(t.users)
-                .whereNot({ manager: true })
-                .andWhereNot({ manager_id });
+                .where({ is_manager: false })
+                .where(function () {
+                    this
+                        .andWhereNot({ manager_id })
+                        .orWhere({ manager_id: null })
+                });
 
             return rows;
         }

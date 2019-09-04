@@ -51,14 +51,14 @@ export class UserDatabaseService {
 
             if (identifierType === EMAIL) {
                 rows = await knex
-                    .select('id as userId', 'username', 'email', 'password')
+                    .select('id as userId', 'username', 'email', 'password', 'is_manager as isManager')
                     .from(t.users)
                     .where({ email: identifier });
             }
 
             else {
                 rows = await knex
-                    .select('id as userId', 'username', 'email', 'password')
+                    .select('id as userId', 'username', 'email', 'password', 'is_manager as isManager')
                     .from(t.users)
                     .where({ username: identifier });
             }
@@ -71,11 +71,26 @@ export class UserDatabaseService {
         }
     }
 
+    async getManagerId(user_id: string) {
+        try {
+            const rows = await knex
+                .select('id as managerId')
+                .from(t.managers)
+                .where({ user_id });
+
+            return rows[0];
+        }
+
+        catch (error) {
+            console.log(`Could not get the Manager Id for user id ${user_id} in Managers table`, error);
+        }
+    }
+
     async getUser(id: string): Promise<UserInformation> {
 
         try {
             const rows = await knex
-                .select('first_name as firstName, last_name as lastName, username, email, is_manager as isManager')
+                .select('first_name as firstName', 'last_name as lastName', 'username', 'email', 'is_manager as isManager')
                 .from(t.users)
                 .where({ id });
 
