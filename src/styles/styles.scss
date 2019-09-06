@@ -12,3 +12,7 @@ body, button {
 // Top-level items
 @import "./components/navigationBar.scss";
 @import "./components/authenticationDialog.scss";
+
+// User components
+@import "./components/profile.scss";
+@import "./components/manager.scss";

@@ -1,12 +1,17 @@
 import axios, { Method } from 'axios';
 
 import { RequestConfig } from '../classes/axiosConfigs';
+import { ProfileInformation, ManagerInformation } from '../interfaces/userPayloads';
 
 export class UserSerivce {
 
 
-    getProfileInformation() {
-        this.executeRequest('get', '/api/user');
+    async getProfileInformation() {
+        return (await this.executeRequest('get', '/api/user')) as ProfileInformation;
+    }
+
+    async getManagerInformation() {
+        return (await this.executeRequest('get', '/api/user/manager')) as ManagerInformation;
     }
 
     private async executeRequest(method: Method, url: string, data?: any) {
@@ -22,13 +27,11 @@ export class UserSerivce {
         }
 
         try {
-            const response = (await axios(config)).data;
-            console.log(response);
-            return response;
+            return (await axios(config)).data;
         }
 
         catch (error) {
-            console.log()
+            console.log(`An error occurred executing the request for ${url}`, error);
         }
     }
 }

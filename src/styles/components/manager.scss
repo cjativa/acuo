@@ -1,0 +1,39 @@
+.manager {
+
+    .employee-selection {
+        width: 1000px;
+
+        display: grid;
+        grid-template-columns: max-content 200px max-content;
+        grid-column-gap: 30px; 
+    }
+
+    .modify-selection {
+        width: 100%;
+
+        display: grid;
+        grid-template-columns: 1fr 1fr; 
+        align-items: center;
+        justify-items: center;
+
+        button {
+            height: 50px;
+            width: 50px;
+
+            color: #ffffff;
+            font-size: 20px;
+
+            border-radius: 50%;
+            border-style: none;
+
+            &:hover {
+                background-color: #4CAF50;
+            }
+        }
+    }
+
+    label {
+        display: block;
+        margin-bottom: 10px;
+    }
+}
